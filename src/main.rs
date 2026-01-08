@@ -1,6 +1,7 @@
 mod verifier;
 mod diagnostics;
 mod architect;
+mod vault;
 
 use clap::{Parser, Subcommand};
 use colored::*;
@@ -33,6 +34,8 @@ enum Commands {
     },
     /// Visualize the recursive hierarchy of an Aztec proof tree
     Tree,
+    /// Access the historical Verification Key registry
+    Vault,
 }
 
 #[tokio::main]
@@ -57,6 +60,10 @@ async fn main() {
             println!("{}", "Generating Recursive Proof Visualization...".magenta());
             let tree = architect::generate_mock_tree();
             architect::visualize_tree(&tree, 0);
+        }
+        Commands::Vault => {
+            let vk_vault = vault::Vault::new();
+            vk_vault.list_entries();
         }
     }
 }
