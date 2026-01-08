@@ -1,4 +1,6 @@
 mod verifier;
+mod diagnostics;
+mod architect;
 
 use clap::{Parser, Subcommand};
 use colored::*;
@@ -29,6 +31,8 @@ enum Commands {
         #[arg(short, long)]
         proof: String,
     },
+    /// Visualize the recursive hierarchy of an Aztec proof tree
+    Tree,
 }
 
 #[tokio::main]
@@ -46,8 +50,13 @@ async fn main() {
         }
         Commands::Inspect { proof } => {
             println!("{}", "Initiating Proof Inspection...".yellow());
-            println!("Proof Path: {}", proof);
-            // Diagnostic logic will be implemented in the next pillar
+            let failures = diagnostics::inspect_proof_constraints(proof);
+            diagnostics::report_diagnostics(failures);
+        }
+        Commands::Tree => {
+            println!("{}", "Generating Recursive Proof Visualization...".magenta());
+            let tree = architect::generate_mock_tree();
+            architect::visualize_tree(&tree, 0);
         }
     }
 }
