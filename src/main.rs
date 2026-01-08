@@ -1,3 +1,5 @@
+mod verifier;
+
 use clap::{Parser, Subcommand};
 use colored::*;
 
@@ -36,14 +38,16 @@ async fn main() {
     match &cli.command {
         Commands::Verify { proof, vk } => {
             println!("{}", "Initiating Proof Verification...".cyan());
-            println!("Proof Path: {}", proof);
-            println!("VK Path: {}", vk);
-            // Verification logic will be implemented in the next step
+            if verifier::verify_proof_logic(proof, vk) {
+                println!("{}", "Verification Logic Initialized Successfully.".green());
+            } else {
+                println!("{}", "Verification Logic Failed to Initialize.".red());
+            }
         }
         Commands::Inspect { proof } => {
             println!("{}", "Initiating Proof Inspection...".yellow());
             println!("Proof Path: {}", proof);
-            // Diagnostic logic will be implemented in the next step
+            // Diagnostic logic will be implemented in the next pillar
         }
     }
 }
